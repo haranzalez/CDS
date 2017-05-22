@@ -1,0 +1,105 @@
+#printContainer .clientInfo, #printContainer .AccusedInfo, #printContainer .ReferralInfo, #printContainer .childrenInfo
+{
+    position: relative !important;
+    width: 70% !important;
+    padding: 0px !important;
+    margin: auto !important;
+    border-radius: 3px;
+    border: 1px solid rgba(44,61,81,.3);
+    border-bottom: none;
+    
+}
+#printContainer .row
+{
+   padding: 0px !important;
+   border-bottom: solid 1px rgba(44,61,81,.3) !important;
+   margin: 0px !important;
+  
+}
+#printContainer .row div
+{
+    padding: 10px !important;
+    margin: 0px !important;
+}
+
+#printContainer p{
+  padding: 0px !important;
+  margin: 0px !important;
+}
+.conTitle {
+   
+    background-color: rgba(44,61,81,1);
+    color: #8799AD;
+    padding: 10px;
+    width: 100% !important;
+    display: flex !important;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    border: solid 1px rgba(44,61,81,.3) !important;
+    
+}
+#printContainer .conTitle div{
+    text-align: left;
+}
+
+#print
+{
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 1000;
+    background-color: orangered;
+    color: white;
+}
+#print:hover{
+  background-color: orange;
+}
+#printContainer div div:nth-child(1) p
+{
+    font-weight: 800;
+    
+}
+
+@media print {
+  #printContainer
+  {
+      color: black !important;
+      width: 100% !important;
+      margin: auto !important;
+      font-size: 12pt;
+  }
+  #printContainer .row div
+    {
+       
+    }
+    #print
+    {
+        display: none !important;
+    }
+    @page {
+      size:8.5in 11in; margin: 3cm .2cm; 
+    }
+    
+    #printContainer .clientInfo, #printContainer .AccusedInfo, #printContainer .ReferralInfo
+    {
+        page-break-after: always;
+    }
+    .conTitle
+    {
+        text-transform: uppercase;
+        font-weight: 800;
+        background-color: black !important;
+        color: white !important;
+    }
+    #printContainer div div:nth-child(1) p
+    {
+        font-weight: 800;
+
+        
+    }
+    #printContainer .row div
+    {
+        padding: 3px !important;
+        margin: 0px !important;
+    }
+}
