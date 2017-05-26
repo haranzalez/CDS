@@ -52,13 +52,10 @@ if($reportQuery !== false)
         
         ),
          'Court Calls.'.$date => array(//Court Calls
-            "Information Calls" => "clients WHERE",
-            "Initial Court Calls - attempted" => "clients WHERE",
-            "Initial Court Calls - completed" => "clients WHERE",
-            "Remand Calls - attempted" => "clients WHERE",
-            "Remand Calls - completed" => "clients WHERE",
-            "Release/Detain Calls - attempted" => "clients WHERE",
-            "Release/Detain Calls - completed" => "clients WHERE"
+            "Information Calls" => "calls WHERE (call_outcome = 'Info Calls') AND",
+            "Initial Court Calls" => "calls WHERE (call_outcome = 'Initial Court Call') AND",
+            "Remand Calls" => "calls WHERE (call_outcome = 'Remand Call') AND",
+            "Release/Detain Calls" => "calls WHERE (call_outcome = 'Release/Detain Call') AND"
         ),
         'Occurrence Types.'.$date => array(//Occurrence Types
             "Accident cause fatality" => "clients WHERE (client_charges LIKE '%Accident%% %%cause%% %%fatality%') AND",

@@ -345,19 +345,40 @@
 		public function search($keyword)
 		{
 			try {
-				$arr = array();
-				$query = "SELECT *, CONCAT_WS(' ', client_name, client_surname) AS client FROM clients HAVING (client_id = '$keyword' OR client_id LIKE '$keyword%' OR client_id LIKE '%$keyword%' OR client_id LIKE '%$keyword' OR client LIKE '$keyword%' OR client LIKE '%$keyword%' OR client LIKE '%$keyword' OR client_gender LIKE '$keyword%')";
-				 $res = $this->_conn->query($query);
-					$results = array();
-					while($row = $res->fetch(PDO::FETCH_ASSOC)) {
+				$results = array();
+				$queryClient = "(SELECT *, CONCAT_WS(' ', client_name, client_surname) AS client FROM clients".
+				" HAVING (client_id = '$keyword' OR client_id LIKE '$keyword%' OR client_id LIKE '%$keyword%'".
+				" OR client_id LIKE '%$keyword' OR client LIKE '$keyword%' OR client LIKE '%$keyword%' OR client". 
+				" LIKE '%$keyword' OR client_gender LIKE '$keyword%'))";
+
+				$queryAccused = "(SELECT *, CONCAT_WS(' ', accused_name, accused_surname) AS acc FROM accused".
+				" HAVING (accused_id = '$keyword' OR accused_id LIKE '$keyword%' OR accused_id LIKE '%$keyword%'".
+				" OR accused_id LIKE '%$keyword' OR acc LIKE '$keyword%' OR acc LIKE '%$keyword%' OR acc". 
+				" LIKE '%$keyword'))";
+				
+
+				 $res1 = $this->_conn->query($queryClient);
+				while($row = $res1->fetch(PDO::FETCH_ASSOC)) {
+					$results[] = $row;
+				}
+
+				$res2 = $this->_conn->query($queryAccused);
+				if($res2->rowCount() > 0)
+				{
+					
+					$cidRow = $res2->fetch(PDO::FETCH_ASSOC);
+					$sql = "SELECT * FROM clients WHERE client_id = '".$cidRow['client_id']."'";
+					$r = $this->_conn->query($sql);
+					while($row = $r->fetch(PDO::FETCH_ASSOC)) {
 		                $results[] = $row;
 		            }
-		            $result = new stdClass();
-				    $result->data = json_encode($results);
 
-				    return $result;
+				}
+	
+
+				return json_encode($results);
 			}catch(PDOException $ex) {
-				print_r($db->errorInfo());
+				print_r($this->_conn->errorInfo());
 			}
 		}
 

@@ -55,7 +55,7 @@ use uploader\DocumentUpload;
     }else if ($query != false && $query == 'search' && $keyword != false) 
     {
 	    $res = $crud->search($keyword);
-		echo $res->data;
+		echo $res;
     }else if ($query != false && $query == 'rows') 
     {
 	    echo $crud->_numRows;
@@ -255,6 +255,7 @@ if($query != false && $query == 'updateAccused' && $aid != false)
    
     $res = $db->query($sql);
     echo 'Success!';
+    //echo $sql;
 
    }catch(Exception $e){
         print_r($db->errorInfo());

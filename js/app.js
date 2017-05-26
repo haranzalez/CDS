@@ -22,6 +22,8 @@ $(document).ready(function() {
     //UI Functions CLass
     var action = new Actions();
     action.getNumOfRecords();
+    //Total records function
+    $("#totalRecs").html('<h1>' + action.total + '</h1>');
     //UI Functions CLass
 
     $('.callsRadioContainer input[name=calls_outcome_filter]').on('change', function() {
@@ -133,10 +135,8 @@ $(document).ready(function() {
         })
         //END ADD ACCUSED FUNCTIONS
 
-    //Total records function
-    var lim = action.total;
-    $("#totalRecs").html('<h1>' + lim + '</h1>');
-    //end Total records function
+
+
 
     //CALLS FUNCTIONS
     $('.callsModalSaveBtn').on('click', function() {
@@ -270,6 +270,7 @@ $(document).ready(function() {
             type: "get",
             url: "src/reports.php?rq=all",
             success: function(data) {
+                console.log(data);
                 var result = JSON.parse(data);
                 var keys = Object.keys(result);
 
@@ -621,7 +622,7 @@ $(document).ready(function() {
     //update function
     $('#updateBtn').on('click', function() {
         $('.documentsList .fileNameContainer').remove();
-
+        var e = $('#client_charges').val();
         var data = $("#main-form").serialize();
 
 
@@ -637,7 +638,7 @@ $(document).ready(function() {
                 var mes = document.createElement('div');
                 if (data == 'Success!') {
                     mes.className = 'messageBox alert alert-success alert-dismissable fade in';
-                    mes.innerHTML = '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Success!</strong> Client:' + id + ' was saved successfully.';
+                    mes.innerHTML = '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Success!</strong> Client:' + id + ' saved successfully.';
 
                     document.getElementById('messageContainer').appendChild(mes);
                     window.setTimeout(function() {
@@ -646,7 +647,7 @@ $(document).ready(function() {
                     $('.form-loading').fadeOut();
                 } else {
                     mes.className = 'messageBox alert alert-danger alert-dismissable fade in';
-                    mes.innerHTML = '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Err!</strong> Sorry.. Something went wrong. ' + data;
+                    mes.innerHTML = '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Err!</strong> Sorry.. Something went wrong. ';
                     document.getElementById('messageContainer').appendChild(mes);
                     window.setTimeout(function() {
                         $(".messageBox").alert('close');
@@ -675,6 +676,9 @@ $(document).ready(function() {
                         mes.className = 'messageBox alert alert-success alert-dismissable fade in';
                         mes.innerHTML = '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Success!</strong> Client:' + id + ' was created successfully.';
                         document.getElementById('messageContainer').appendChild(mes);
+                        //Total records function
+                        action.getNumOfRecords();
+                        $("#totalRecs").html('<h1>' + action.total + '</h1>');
                         window.setTimeout(function() {
                             $(".messageBox").alert('close');
                         }, 5000);
@@ -861,50 +865,70 @@ var Actions = function main() {
 
             var d = JSON.parse(data);
             if (d.length > 0) {
-
+                var ch = [];
                 this.tKeys = key;
                 var accArr = [];
                 for (var j = 0; j < d.length; j++) {
 
                     var key = Object.keys(d[j]);
+
                     for (var i = 0; i < key.length; i++) {
                         if (key[i] == 'client_charges') {
 
-                            $('#client_charges').val(d[0][key[i]].split(','));
-                            $('#client_charges').trigger('chosen:updated');
+                            //$("#client_charges option[value='" + d[0][key[i]].split(',') + "']").prop('selected', true);
+
+                            //$("#client_charges").val(d[0][key[i]].split(',')).trigger('chosen:updated');
+                            ch.push(d[0][key[i]].split(','));
+
+
                         }
                         if (key[i] == 'police_incident_id') {
                             $('#mainForm #police_incident_id').val(d[0][key[i]]);
+
                         }
                         if (key[i].substr(0, 2) == 'ac' && key[i] == 'accused_id') {
                             accArr.push(d[j][key[i]]);
+
                         }
                         if (key[i] == 'client_id') {
                             $('#mainForm .' + key[i]).text(d[0][key[i]]);
                             $('#mainForm #' + key[i]).val(d[0][key[i]]);
                             $('#printBtn').attr('data-print-id', d[0][key[i]]);
                             $('#addCallBtn').attr('data-cid', d[0][key[i]]);
+
                         } else {
                             if ($('#mainForm #' + key[i]).attr('type') == 'checkbox' && $('#mainForm #' + key[i]).prop('checked') == 0 && d[0][key[i]] == 1) {
                                 $('#mainForm #' + key[i]).prop("checked", true);
+
                             } else if ($('#mainForm #' + key[i]).attr('type') == 'checkbox' && d[0][key[i]] == 0) {
                                 $('#mainForm #' + key[i]).prop("checked", false);
+
                             }
                             if (key[i] == 'client_home_phone') {
                                 $('#mainForm #' + key[i]).val(d[0][key[i]]);
                                 $('#mainForm .client-phone-number').text(d[0][key[i]]);
+
                             }
                             $('#mainForm #' + key[i]).val(d[0][key[i]]);
-
 
                         }
 
 
                     }
                 }
-                this.renderAccused(accArr);
+                if (ch[0].length > 0) {
+                    $("#client_charges").val(ch[0]).trigger('chosen:updated');
+                } else {
+                    $("#client_charges").val('').trigger('chosen:updated');
+                    console.log(ch);
+                }
+
+
+                ch = [];
+                this.renderAccused();
 
             }
+
         }
         this.print = function(data) {
 
@@ -1605,7 +1629,16 @@ var Actions = function main() {
 
                             '</div></form>';
 
-                        $('.accusedMainContainer').prepend(html);
+                        $('.accusedMainContainer').append(html);
+                        if (d[i].accused_indigenous == 1) {
+                            $("accusedUpdateForm_" + d[i].accused_id + " input[name='accused_indigenous']").prop('checked', true);
+                        }
+                        if (d[i].accused_young_offender == 1) {
+                            $("accusedUpdateForm_" + d[i].accused_id + " input[name='accused_young_offender']").prop('checked', true);
+                        }
+                        if (d[i].accused_516 == 1) {
+                            $("accusedUpdateForm_" + d[i].accused_id + " input[name='accused_516']").prop('checked', true);
+                        }
 
 
                     }

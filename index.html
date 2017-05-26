@@ -125,9 +125,16 @@
                                         </div>
                                         <p class="client_safety_label" style="text-align: center;text-transform: uppercase;line-height:1; font-size:8pt;margin-top:30px !important;"><small>safety<br/> concern</small></p>
                                     </div>
+                                    <div class="clientHistoricalContainer">
+                                        <div class="client_historical">
+                                            <input type="checkbox" value="0" id="client_historical" name="client_historical" />
+                                            <label for="client_historical"><i class="fa fa-history" aria-hidden="true"></i></label>
+                                        </div>
+                                        <p class="client_safety_label" style="text-align: center;text-transform: uppercase;line-height:1; font-size:8pt;margin-top:30px !important;"><small>HISTORICAL</small></p>
+                                    </div>
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <h2>Client ID :
+                                            <h2>Client <i class="fa fa-id-card-o" aria-hidden="true"></i> :
                                                 <a href="#" class="client_id"></a>
                                             </h2>
                                         </div>
@@ -380,7 +387,7 @@
 
                                 <div role="tabpanel" class="tab-pane" id="children">
                                     <fieldset>
-                                        <h2>Children <i class="glyphicon glyphicon-info-sign"></i></h2>
+                                        <h2>Children <i class="fa fa-child" aria-hidden="true"></i></h2>
                                         <div class="row childrenSectionParent">
 
                                             <div class="col-md-6 childrenSection1">
@@ -429,7 +436,7 @@
                                 <div role="tabpanel" class="tab-pane accused-tab-pane" id="add-accused">
                                     <div class="row">
                                         <div class="col-md-8">
-                                            <h2>Accused Information</h2>
+                                            <h2>Accused <i class="fa fa-id-card" aria-hidden="true"></i></h2>
                                         </div>
                                         <div class="col-md-4">
                                             <button type="button" id="addAccusedBtn">Add Accused</button>
@@ -447,7 +454,7 @@
                                                 <h2>Notes __<i class="glyphicon glyphicon-pencil"></i></h2>
                                             </div>
                                             <div class="col-md-6">
-                                                <h2>Documents</h2>
+                                                <h2>Documents <i class="fa fa-file-text" aria-hidden="true"></i></h2>
                                             </div>
                                         </div>
 
@@ -813,7 +820,7 @@
                 <div class="col-md-3">
                     <div class="panel-section">
                         <div>
-                            <p>Total Number Of Records</p>
+                            <p>Total Number Of Clients</p>
                             <div id="totalRecs"></div>
                         </div>
 

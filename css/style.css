@@ -864,22 +864,33 @@ button:focus {
     left: 39px;
 }
 
-.clientSafetyContainer {
+.clientSafetyContainer,
+.clientHistoricalContainer {
     position: absolute;
     width: 100px;
     right: 0;
     z-index: 2001;
 }
 
-.client_safety_concern input[type=checkbox] {
+.clientHistoricalContainer {
+    bottom: 70%;
+}
+
+.client_safety_concern input[type=checkbox],
+.client_historical input[type=checkbox] {
     visibility: hidden;
+}
+
+.client_historical input[type=checkbox]:checked+label {
+    color: darkorange;
 }
 
 .client_safety_concern input[type=checkbox]:checked+label {
     color: red;
 }
 
-.client_safety_concern label {
+.client_safety_concern label,
+.client_historical label {
     position: absolute;
     top: 0;
     font-size: 30pt;
@@ -889,6 +900,10 @@ button:focus {
 
 .client_safety_concern label:hover {
     color: pink;
+}
+
+.client_historical label:hover {
+    color: lightsalmon;
 }
 
 .client_elder_abuse,
