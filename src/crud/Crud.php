@@ -155,10 +155,29 @@
                                 $sql .= "'', ";
                               }
       
-                          }else
+                          }else if($cli[$key] == "client_referral_provided")
                           {
+                              if(count($val) > 0 && $val != '')
+                              {
+                                  $str2 = '';
+                                  $d = 0;
+                                 
+                                  foreach($val as $v)
+                                  {
+                                      if(++$d === count($val))
+                                      {
+                                          $str2 .= $v;
+                                      }else{
+                                          $str2 .= $v.",";
+                                      }  
+                                  }
+                                $sql .= "'".$str2."', ";
+                              }else{
+                                $sql .= "'', ";
+                              }
+      
+                          }else{
                               $sql .= "'".$val."', ";
-                           
                           }
 					  	
 					}
@@ -230,7 +249,28 @@
                                       }  
                                   }
                                   $cli[] = $key."='".$str."'";
-                              }
+                              }else{
+								  $cli[] = $key."=''";
+							  }
+                          } else if($key == "client_referral_provided")
+                          {
+                              if(count($val) > 0 && $val != '')
+                              {
+                                  $str2 = '';
+                                  $b = 0;
+                                  foreach($val as $v)
+                                  {
+                                      if(++$b === count($val))
+                                      {
+                                          $str2 .= $v;
+                                      }else{
+                                          $str2 .= $v.",";
+                                      }  
+                                  }
+                                  $cli[] = $key."='".$str2."'";
+                              }else{
+								  $cli[] = $key."=''";
+							  }
                           }else
                           {
                               $cli[] = $key."='".$val."'";

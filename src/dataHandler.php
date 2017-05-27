@@ -5,6 +5,7 @@ use uploader\DocumentUpload;
     $query = (isset($_GET['q']))?$_GET['q']:false;
     $cid = (isset($_GET['client_id']))?$_GET['client_id']:false;
     $aid = (isset($_GET['accused_id']))?$_GET['accused_id']:false;
+    $callId = (isset($_GET['call_id']))?$_GET['call_id']:false;
 	$sql = (isset($_GET['sql']))?$_GET['sql']:false;
 	$keyword = (isset($_GET['keyword']))?$_GET['keyword']:false;
 	$file = (isset($_FILES['client_documents']))?$_FILES['client_documents']:false;
@@ -141,6 +142,38 @@ if($query != false && $query == 'addCall' && $cid != false)
     }catch(Exception $e){
         $result[] = $e->getMessage();
     }
+}
+if($query != false && $query == 'updateCall' && $callId != false)
+{
+   try{
+    $sql = "UPDATE calls SET ";
+    $numOfItems = count($_POST);
+    $i = 0;
+    foreach($_POST as $key=>$value)
+    {
+        ++$i;
+        if($key != 'q' && $key != 'call_id')
+        {
+             if($i == $numOfItems)
+            {
+                $sql .= $key."='".$value."'";
+                }else{
+                    $sql .= $key."='".$value."',";
+                }
+            }
+    }
+    $sql .= " WHERE call_id='".$callId."'";
+   
+    $res = $db->query($sql);
+    echo 'Success!';
+    //echo $sql;
+
+   }catch(Exception $e){
+        print_r($db->errorInfo());
+
+    }
+  
+
 }
 if($query != false && $query == 'callFilter' && $cid != false && $callFilter != false)
 {

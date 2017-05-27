@@ -1,3 +1,13 @@
+#client_referral_provided_chosen .chosen-choices {
+    max-height: 80px !important;
+    overflow: auto !important;
+}
+
+#client_charges_chosen .chosen-choices {
+    max-height: 150px !important;
+    overflow: auto !important;
+}
+
 .accusedMainContainer {
     margin: 0px!important;
     padding: 0px !important;

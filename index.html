@@ -300,7 +300,7 @@
                                                     <p>Referrals Provided: </p>
                                                 </div>
                                                 <div class="col-md-8 text-input">
-                                                    <select name="client_referral_provided" id="client_referral_provided">
+                                                    <select multiple data-placeholder="Select referrals" name="client_referral_provided[]" id="client_referral_provided">
                                                     <option value="VWAP">VWAP</option>
                                                     <option value="BFACS">BFACS</option>
                                                     <option value="CIC">CIC</option>
@@ -339,7 +339,7 @@
                                                     <p>Charges: </p>
                                                 </div>
                                                 <div class="col-md-8 text-input">
-                                                    <select name="client_charges[]" id="client_charges" multiple="multiple">
+                                                    <select data-placeholder="Select charges" name="client_charges[]" id="client_charges" multiple="multiple">
                                                         <option value="Accident cause fatality">Accident cause fatality</option>
                                                         <option value="Aggravated assault">Aggravated assault</option>
                                                         <option value="Assault cause bandily harm">Assault cause bandily harm</option>

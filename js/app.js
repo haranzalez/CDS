@@ -100,10 +100,10 @@ $(document).ready(function() {
 
 
     $('.accusedMainContainer').on('click', '.accusedBoxContainer .accusedModalUpdateBtn', function() {
-            $('.accusedBoxMainLoading').show();
-            var aid = $(this).attr('data-aid');
-            var data = $("#accusedUpdateForm_" + aid).serialize();
 
+            var aid = $(this).attr('data-aid');
+            var data = $(".accusedMainContainer #accusedUpdateForm_" + aid).serialize();
+            console.log(data);
             $.ajax({
                 data: data,
                 async: false,
@@ -143,7 +143,7 @@ $(document).ready(function() {
         $('.form-loading').fadeIn();
         var valid = $('#calls-form').parsley().validate();
         if (valid) {
-            var cid = $('#addCallBtn').attr('data-cid');
+            var cid = $('#client_id').val();
             var data = $("#calls-form").serialize();
             $.ajax({
                 data: data,
@@ -421,6 +421,9 @@ $(document).ready(function() {
     $("#client_charges").chosen({
         width: '100%'
     });
+    $("#client_referral_provided").chosen({
+        width: '100%'
+    });
 
 
     //Main form checkbox function
@@ -647,7 +650,7 @@ $(document).ready(function() {
                     $('.form-loading').fadeOut();
                 } else {
                     mes.className = 'messageBox alert alert-danger alert-dismissable fade in';
-                    mes.innerHTML = '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Err!</strong> Sorry.. Something went wrong. ';
+                    mes.innerHTML = '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Err!</strong> Sorry.. Something went wrong. ' + data;
                     document.getElementById('messageContainer').appendChild(mes);
                     window.setTimeout(function() {
                         $(".messageBox").alert('close');
@@ -713,12 +716,13 @@ $(document).ready(function() {
     //add clientBtn function to open form
     $('#addBtn').on('click', function() {
         $('.accusedBoxContainer').remove();
-        $('.callsTab').hide();
+
         $('.accusedModal').hide();
         $('.calls_modal').hide();
         $('.documentsList .fileNameContainer').remove();
         $('#main-form')[0].reset();
         $('#client_charges').trigger('chosen:updated');
+        $('#client_referral_provided').trigger('chosen:updated');
         $('.nav-tabs li').removeClass('active main');
         $('.tab-pane').removeClass('active');
         $('.tab-pane:nth-child(1)').addClass('active');
@@ -866,6 +870,7 @@ var Actions = function main() {
             var d = JSON.parse(data);
             if (d.length > 0) {
                 var ch = [];
+                var ref = [];
                 this.tKeys = key;
                 var accArr = [];
                 for (var j = 0; j < d.length; j++) {
@@ -881,6 +886,9 @@ var Actions = function main() {
                             ch.push(d[0][key[i]].split(','));
 
 
+                        }
+                        if (key[i] == 'client_referral_provided') {
+                            ref.push(d[0][key[i]].split(','));
                         }
                         if (key[i] == 'police_incident_id') {
                             $('#mainForm #police_incident_id').val(d[0][key[i]]);
@@ -920,11 +928,18 @@ var Actions = function main() {
                     $("#client_charges").val(ch[0]).trigger('chosen:updated');
                 } else {
                     $("#client_charges").val('').trigger('chosen:updated');
-                    console.log(ch);
                 }
+                if (ref[0].length > 0) {
+                    $("#client_referral_provided").val(ref[0]).trigger('chosen:updated');
+                } else {
+                    $("#client_referral_provided").val('').trigger('chosen:updated');
+                }
+                console.log(ref);
+
 
 
                 ch = [];
+                ref = [];
                 this.renderAccused();
 
             }
@@ -1408,7 +1423,13 @@ var Actions = function main() {
                                     '</div>' +
                                     '<div class="callNotes row">' +
                                     '<div class="col-md-12">' +
-                                    '<p id="call_notes">' + d[i].call_notes + '</p>' +
+                                    '<textarea name="call_notes" id="call_notes">' + d[i].call_notes + '</textarea>' +
+                                    '<input type="hidden" value="' + d[i].call_id + '" name="call_id">' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '<div class="row">' +
+                                    '<div class="col-md-12">' +
+                                    '<button type="button" id="callUpdateBtn">Update</button>' +
                                     '</div>' +
                                     '</div>' +
                                     '</div>' +
@@ -1485,7 +1506,13 @@ var Actions = function main() {
                                     '</div>' +
                                     '<div class="callNotes row">' +
                                     '<div class="col-md-12">' +
-                                    '<p id="call_notes">' + d[i].call_notes + '</p>' +
+                                    '<textarea name="call_notes" id="call_notes">' + d[i].call_notes + '</textarea>' +
+                                    '<input type="hidden" value="' + d[i].call_id + '" name="call_id">' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '<div class="row">' +
+                                    '<div class="col-md-12">' +
+                                    '<button type="button" id="callUpdateBtn">Update</button>' +
                                     '</div>' +
                                     '</div>' +
                                     '</div>' +
@@ -1537,10 +1564,6 @@ var Actions = function main() {
 
 
                         var html = '<form id="accusedUpdateForm_' + d[i].accused_id + '"><div class="accusedBoxContainer col-md-4">' +
-                            '<div class="accusedBoxMainLoading">' +
-                            '<i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>' +
-                            '<span class="sr-only">Loading...</span>' +
-                            '</div>' +
                             '<button class="accusedBoxCloseBtn" type="button">X</button>' +
                             '<input class="aid" name="accused_id" type="hidden" value="' + d[i].accused_id + '">' +
 
@@ -1589,38 +1612,23 @@ var Actions = function main() {
 
                             '<div class="row">' +
                             '<div class="col-md-6"><p>Indegenous</p></div>' +
-                            '<div class="col-md-6">';
-                        if (d[i].accused_indigenous == 1) {
-                            html = html + '<input type="checkbox" checked value="0" name="accused_indigenous" />';
-                        } else {
-                            html = html + '<input type="checkbox" value="0" name="accused_indigenous" />';
-                        }
-                        html = html + '</div>' +
+                            '<div class="col-md-6">' +
+                            '<input type="checkbox" value="0" name="accused_indigenous" />' +
+                            '</div>' +
                             '</div>' +
 
                             '<div class="row">' +
                             '<div class="col-md-6"><p>Young Offender</p></div>' +
-                            '<div class="col-md-6">';
-                        if (d[i].accused_young_offender == 1) {
-                            html = html + '<input type="checkbox" checked value="0" name="accused_young_offender" />';
-                        } else {
-                            html = html + '<input type="checkbox" value="0" name="accused_young_offender" />';
-                        }
-                        html = html + '</div>' +
+                            '<div class="col-md-6">' +
+                            '<input type="checkbox" value="0" name="accused_young_offender" />' +
+                            '</div>' +
                             '</div>' +
 
                             '<div class="row">' +
                             '<div class="col-md-6"><p>Order 516</p></div>' +
-                            '<div class="col-md-6 accussedOrder516">';
-                        if (d[i].accused_516 == 1) {
-                            html = html + '<input type="checkbox" value="0" checked id="accussedOrder516" name="accused_516" />' +
-                                '<label for="accussedOrder516"></label>';
-                        } else {
-                            html = html + '<input type="checkbox" value="0" id="accussedOrder516" name="accused_516" />' +
-                                '<label for="accussedOrder516"></label>';
-                        }
-
-                        html = html + '</div>' +
+                            '<div class="col-md-6 accussedOrder516">' +
+                            '<input type="checkbox" value="0" id="accussedOrder516" name="accused_516" />' +
+                            '</div>' +
                             '</div>' +
 
                             '<div style="position:relative; width: 100%;"><button data-aid="' + d[i].accused_id + '" type="button" class="accusedModalUpdateBtn">Update</button></div>' +
@@ -1631,13 +1639,13 @@ var Actions = function main() {
 
                         $('.accusedMainContainer').append(html);
                         if (d[i].accused_indigenous == 1) {
-                            $("accusedUpdateForm_" + d[i].accused_id + " input[name='accused_indigenous']").prop('checked', true);
+                            $("#accusedUpdateForm_" + d[i].accused_id + " input[name='accused_indigenous']").prop('checked', true);
                         }
                         if (d[i].accused_young_offender == 1) {
-                            $("accusedUpdateForm_" + d[i].accused_id + " input[name='accused_young_offender']").prop('checked', true);
+                            $("#accusedUpdateForm_" + d[i].accused_id + " input[name='accused_young_offender']").prop('checked', true);
                         }
                         if (d[i].accused_516 == 1) {
-                            $("accusedUpdateForm_" + d[i].accused_id + " input[name='accused_516']").prop('checked', true);
+                            $("#accusedUpdateForm_" + d[i].accused_id + " input[name='accused_516']").prop('checked', true);
                         }
 
 
