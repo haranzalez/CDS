@@ -1,3 +1,15 @@
+.logoutBtn {
+    color: silver !important;
+    position: absolute;
+    right: 0;
+    top: 80px;
+}
+
+.logoutBtn:hover {
+    color: white !important;
+    text-decoration: none;
+}
+
 #client_referral_provided_chosen .chosen-choices {
     max-height: 80px !important;
     overflow: auto !important;

@@ -1,3 +1,25 @@
+<?php 
+    session_start();
+    if(isset($_GET['logout']))
+    {
+        unset($_SESSION["user"]);
+        unset($_SESSION["user_full_name"]);
+        unset($_SESSION["sess"]);
+    }
+   
+    if(!isset($_SESSION['user']) && !isset($_SESSION['sess']))
+    {
+        $destination = 'src/login.php';
+       header("Location: ".$destination);
+       exit;
+    }
+    
+    $user = (isset($_SESSION['user_full_name']))?$_SESSION['user_full_name']:'Uknown';
+
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -45,6 +67,9 @@
             <div class="col-md-3 logo">
                 <img style="width: 150px; margin-right:10px;" src="img/vslogo.png" alt="">
                 <h5 style="padding-top: 50px; font-size:15pt;">Court <br/>Data<br/> System</h5>
+            </div>
+            <div class="col-md-9">
+                <a class="logoutBtn" href="index.php?logout=true">Sign Out <i class="glyphicon glyphicon-off"></i></a>
             </div>
 
         </div>
