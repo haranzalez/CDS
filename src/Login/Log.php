@@ -1,5 +1,5 @@
  <?php 
-
+   ob_start();
    class Log
    {
        public function __construct($db)
@@ -25,7 +25,7 @@
                     $res = $this->_conn->query($sql);
                     if($res->rowCount() > 0)
                     {
-                       $destination = 'http://local.dev/brantfordpd';
+                       $destination = '../../index.php';
                        header("Location: ".$destination);
                        exit;
                     }
@@ -39,7 +39,7 @@
 
        public function login($username, $pass)
        {
-           $destination = 'http://local.dev/brantfordpd';
+           $destination = '../index.php';
            if($this->_isLogedIn == false)
            {
                try{
@@ -51,10 +51,10 @@
                     $row = $res->fetch(PDO::FETCH_ASSOC);
                     $this->_isLogedIn = true;
                     $this->_sessid = $this->sessionID();
-                    $this->_user = $row['user_first_name'] . ' ' . $row['user_last_name'];
+                    $this->_user = $row['user_name'];
 
-                    $_SESSION['user'] = $row['user_name'];
-                    $_SESSION['user_full_name'] = $this->_user;
+                    $_SESSION['user'] =  $this->_user;
+                    $_SESSION['user_full_name'] = $row['user_first_name'] . ' ' . $row['user_last_name'];
                     $_SESSION['sess'] = $this->_sessid;
 
                     $sqlUpdt = "UPDATE users SET user_session_id = '$this->_sessid' WHERE user_name = '$username' AND user_pass = '$pass'";
