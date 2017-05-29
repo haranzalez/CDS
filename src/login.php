@@ -161,7 +161,9 @@
         </div>
     </div>
 
-
+     <footer style="text-align: center; margin:50px;">
+            <p style="color: #2c3d51">In development by <a style="color: #2c3d51" href="mailto:haranzalez@gmail.com">Hans Aranzalez</a></p>
+        </footer>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 </body>
 

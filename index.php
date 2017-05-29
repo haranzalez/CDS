@@ -153,7 +153,7 @@
                                     <div class="clientHistoricalContainer">
                                         <div class="client_historical">
                                             <input type="checkbox" value="0" id="client_historical" name="client_historical" />
-                                            <label for="client_historical"><i class="fa fa-history" aria-hidden="true"></i></label>
+                                            <label for="client_historical"><i class="fa fa-book" aria-hidden="true"></i></label>
                                         </div>
                                         <p class="client_safety_label" style="text-align: center;text-transform: uppercase;line-height:1; font-size:8pt;margin-top:30px !important;"><small>HISTORICAL</small></p>
                                     </div>
@@ -912,7 +912,7 @@
 
 
         <footer style="text-align: center; margin:50px;">
-            <p style="color: #C0C5CB">In development by Hans Aranzalez</p>
+            <p style="color: #C0C5CB">In development by <a style="color:#C0C5CB;" href="mailto:haranzalez@gmail.com">Hans Aranzalez</a></p>
         </footer>
 
         <script src="js/jquery-3.1.1.min.js"></script>

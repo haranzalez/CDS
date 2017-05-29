@@ -490,6 +490,8 @@ $(document).ready(function() {
     //Generate new id function
     $('#genIdBtn').on('click', function() {
         document.getElementById("main-form").reset();
+        $('.accusedBoxContainer').remove();
+        $('.calls div').remove();
         $('#client_charges').trigger('chosen:updated');
         var cId = action.ID('C');
         $('.client_id').text(cId);
@@ -1441,7 +1443,7 @@ var Actions = function main() {
                             $('.callNotesBtn').clickToggle(function() {
                                 $(this).parent().parent().parent('.callContainer').css({
                                     position: 'absolute',
-                                    height: '220px',
+                                    height: '450px',
                                     zIndex: '1020',
                                     left: '8px'
                                 });
@@ -1524,7 +1526,7 @@ var Actions = function main() {
                             $('.callNotesBtn').clickToggle(function() {
                                 $(this).parent().parent().parent('.callContainer').css({
                                     position: 'absolute',
-                                    height: '220px',
+                                    height: '240px',
                                     zIndex: '1020',
                                     left: '8px'
                                 });
