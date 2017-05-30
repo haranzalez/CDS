@@ -12,7 +12,7 @@
         $res = $log->login($user, $pass);
         if($res == false)
         {
-            $mes = "wrong username or password";
+            $mes = "Wrong username or password. Please try again.";
         }
     }
    
@@ -123,6 +123,11 @@
         .logBox .newUserLinkBox p {
             text-align: center;
         }
+        .logBox .loginMess
+        {
+            color: orangered;
+            text-align: center;
+        }
     </style>
 
 </head>
@@ -149,14 +154,14 @@
             </form>
             <?php 
             if(isset($mes)){
-                echo "<p>".$mes."</p>";
+                echo "<p class='loginMess'>".$mes."</p>";
             }
             
         
             ?>
             <div class="row">
                 <div class="col-md-12 newUserLinkBox">
-                    <p>New user? <a href="#">Create one</a></p>
+                    <p>Admin? <a href="#">Sign In</a></p>
                 </div>
             </div>
         </div>

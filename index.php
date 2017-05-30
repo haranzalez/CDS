@@ -2,9 +2,8 @@
     session_start();
     if(isset($_GET['logout']))
     {
-        unset($_SESSION["user"]);
-        unset($_SESSION["user_full_name"]);
-        unset($_SESSION["sess"]);
+        unset($_SESSION["user"], $_SESSION["user_full_name"], $_SESSION["sess"], $_SESSION['timestamp']);
+        
     }
    
     if(!isset($_SESSION['user']) && !isset($_SESSION['sess']))
@@ -13,7 +12,7 @@
        header("Location: ".$destination);
        exit;
     }
-    
+
     $user = (isset($_SESSION['user_full_name']))?$_SESSION['user_full_name']:'Uknown';
 
 ?>
@@ -125,7 +124,7 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <div class="action-btn-wrapper">
                         <ul class="nav nav-tabs" role="tablist">
-                            <li role="presentation" class="active main"><a href="#client" class="clientIdBtn" aria-controls="client" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-user"></i>  Client</a></li>
+                            <li role="presentation" class="active main"><a href="#client" class="clientIdBtn" aria-controls="client" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-user"></i>  Client: <span class="cidtab"></span></a></li>
                             <li role="presentation"><a href="#children" aria-controls="children" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-baby-formula"></i>  Children</a></li>
                             <li role="presentation" class="accusedTab"><a href="#add-accused" aria-controls="add-accused" role="tab" data-toggle="tab"><small><i class="glyphicon glyphicon-hand-right"></i></small><i class="glyphicon glyphicon-user"></i>  Accused</a></li>
 
@@ -610,10 +609,7 @@
 
                                     </fieldset>
 
-
                                 </div>
-
-
 
                             </div>
 

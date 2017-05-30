@@ -6,7 +6,7 @@
 }
 
 .logoutBtn:hover {
-    color: orangered !important;
+    color: #8799ad !important;
     text-decoration: none;
 }
 
@@ -1048,11 +1048,23 @@ button:focus {
 
 .callContainer #callUpdateBtn {
     float: right;
-    margin: 10px;
+    margin: 10px 0px;
     background-color: darkgreen;
     border: none;
     color: white;
     border-radius: 3px;
+}
+
+.delCallBtn {
+    background: transparent;
+    color: silver;
+    margin: 10px 5px;
+    float: right;
+}
+
+.delCallBtn:hover {
+    color: white;
+    background-color: red;
 }
 
 .callNotes .col-md-12 {

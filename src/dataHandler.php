@@ -2,6 +2,7 @@
 use uploader\DocumentUpload;
 	include 'dbcred.php';
 	include 'crud/Crud.php';
+    
     $query = (isset($_GET['q']))?$_GET['q']:false;
     $cid = (isset($_GET['client_id']))?$_GET['client_id']:false;
     $aid = (isset($_GET['accused_id']))?$_GET['accused_id']:false;
@@ -18,6 +19,8 @@ use uploader\DocumentUpload;
 	
 
     $crud = new Crud($db);
+  
+    
 
     if($query != false && $query == 'all')
     {
@@ -147,10 +150,11 @@ if($query != false && $query == 'updateCall' && $callId != false)
 {
    try{
     $sql = "UPDATE calls SET ";
-    $numOfItems = count($_POST);
-    $i = 0;
-    foreach($_POST as $key=>$value)
+    $numOfItems = count($_GET);
+    $i = 1;
+    foreach($_GET as $key=>$value)
     {
+       
         ++$i;
         if($key != 'q' && $key != 'call_id')
         {
@@ -170,10 +174,21 @@ if($query != false && $query == 'updateCall' && $callId != false)
 
    }catch(Exception $e){
         print_r($db->errorInfo());
-
+       
+       
     }
   
 
+}
+if($query != false && $query == 'delCall' && $callId != false)
+{
+    try{
+    $sql = "DELETE FROM calls WHERE call_id='".$callId."'";
+    $res = $db->query($sql);
+    echo 'Success!';
+    }catch(Exception $e){
+        echo $q;
+    }
 }
 if($query != false && $query == 'callFilter' && $cid != false && $callFilter != false)
 {

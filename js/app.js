@@ -186,7 +186,80 @@ $(document).ready(function() {
         document.getElementById("calls-form").reset();
         $('.calls_modal').fadeIn();
     });
-    //CALLS FUNCTIONS
+
+    $('.calls').on('click', '#callUpdateBtn', function() {
+        var cid = $('#client_id').val();
+        var callid = $(this).parent().parent().parent().children('.callNotes').children().children('input[name=call_id]').val();
+        var d = $("#call" + callid).serialize();
+        console.log(d);
+        $.ajax({
+            async: false,
+            type: "post",
+            url: "src/dataHandler.php?q=updateCall&" + d,
+            success: function(data) {
+                console.log(data);
+                var mes = document.createElement('div');
+                if (data == 'Success!') {
+                    mes.className = 'messageBox alert alert-success alert-dismissable fade in';
+                    mes.innerHTML = '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Success! call updated for client ID: ' + cid;
+                    document.getElementById('messageContainer').appendChild(mes);
+                    window.setTimeout(function() {
+                        $(".messageBox").alert('close');
+                    }, 3000);
+                    action.renderCalls(cid, 'all');
+                    $('.form-loading').fadeOut();
+                } else {
+                    mes.className = 'messageBox alert alert-danger alert-dismissable fade in';
+                    mes.innerHTML = '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Err!</strong> Sorry.. Something went wrong.' + data;
+                    document.getElementById('messageContainer').appendChild(mes);
+                    window.setTimeout(function() {
+                        $(".messageBox").alert('close');
+                    }, 3000);
+                    $('.form-loading').fadeOut();
+
+                }
+            }
+        });
+    })
+
+    $('.calls').on('click', '.delCallBtn', function() {
+            var cid = $('#client_id').val();
+            var callid = $(this).parent().parent().parent().children('.callNotes').children().children('input[name=call_id]').val();
+            var conf = window.confirm('This call from client ID: ' + cid + ' is about to be destroyed and it can not be undone. Would you like to proceed?');
+
+            if (conf) {
+                $.ajax({
+                    async: false,
+                    type: "post",
+                    url: "src/dataHandler.php?q=delCall&call_id=" + callid,
+                    success: function(data) {
+
+                        var mes = document.createElement('div');
+                        if (data == 'Success!') {
+                            mes.className = 'messageBox alert alert-success alert-dismissable fade in';
+                            mes.innerHTML = '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Success! call deleted for client ID: ' + cid;
+                            document.getElementById('messageContainer').appendChild(mes);
+                            window.setTimeout(function() {
+                                $(".messageBox").alert('close');
+                            }, 3000);
+                            action.renderCalls(cid, 'all');
+                            $('.form-loading').fadeOut();
+                        } else {
+                            mes.className = 'messageBox alert alert-danger alert-dismissable fade in';
+                            mes.innerHTML = '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Err!</strong> Sorry.. Something went wrong.' + data;
+                            document.getElementById('messageContainer').appendChild(mes);
+                            window.setTimeout(function() {
+                                $(".messageBox").alert('close');
+                            }, 3000);
+                            $('.form-loading').fadeOut();
+
+                        }
+                    }
+                });
+            }
+
+        })
+        //CALLS FUNCTIONS
 
     //report date range function
     $('#to').on('change', function() {
@@ -718,7 +791,8 @@ $(document).ready(function() {
     //add clientBtn function to open form
     $('#addBtn').on('click', function() {
         $('.accusedBoxContainer').remove();
-
+        $('.calls form').remove();
+        $('.client-phone-number').text('');
         $('.accusedModal').hide();
         $('.calls_modal').hide();
         $('.documentsList .fileNameContainer').remove();
@@ -733,6 +807,7 @@ $(document).ready(function() {
         var d = new Date();
         var cId = action.ID('C');
         $('.client_id').text(cId);
+        $('.cidtab').text(cId);
         $('#client_id').val(cId);
         $('#saveBtn').show();
         $('#updateBtn').hide();
@@ -905,6 +980,7 @@ var Actions = function main() {
                             $('#mainForm #' + key[i]).val(d[0][key[i]]);
                             $('#printBtn').attr('data-print-id', d[0][key[i]]);
                             $('#addCallBtn').attr('data-cid', d[0][key[i]]);
+                            $('.cidtab').text(d[0][key[i]]);
 
                         } else {
                             if ($('#mainForm #' + key[i]).attr('type') == 'checkbox' && $('#mainForm #' + key[i]).prop('checked') == 0 && d[0][key[i]] == 1) {
@@ -959,10 +1035,10 @@ var Actions = function main() {
                 '</div>' +
 
                 '<div class="row">' +
-                '<div class="col-md-4">' +
+                '<div class="col-md-6">' +
                 '<p class="secTitle">Client ID: </p>' +
                 '</div>' +
-                '<div class="col-md-8">' +
+                '<div class="col-md-6">' +
                 '<p>' + data[0].client_id + '</p>' +
                 '</div>' +
                 '</div>' +
@@ -1394,11 +1470,12 @@ var Actions = function main() {
                             var d = JSON.parse(data);
                             for (var i = 0; i < d.length; i++) {
                                 var date = new Date(d[i].call_date).toDateString();
-                                var html = '<div class="col-md-4" style="position: relative;">' +
+                                var html = '<form id="call' + d[i].call_id + '"><div class="col-md-4" style="position: relative;">' +
                                     '<div class="callContainer row">' +
                                     '<div class="callHeader row">' +
 
-                                    '<div id="call_date" class="col-md-12">' + date + '</div>' +
+                                    '<div id="call_date" class="col-md-12">' + d[i].call_date + '</div>' +
+
                                     '</div>' +
                                     '<div class="callActions row">' +
                                     '<div class="col-md-6">';
@@ -1431,11 +1508,11 @@ var Actions = function main() {
                                     '</div>' +
                                     '<div class="row">' +
                                     '<div class="col-md-12">' +
-                                    '<button type="button" id="callUpdateBtn">Update</button>' +
+                                    '<button type="button" id="callUpdateBtn">Update</button><button type="button" class="delCallBtn">Delete</button>' +
                                     '</div>' +
                                     '</div>' +
                                     '</div>' +
-                                    '</div>';
+                                    '</div></form>';
                                 $('.calls').prepend(html);
 
 
@@ -1443,7 +1520,7 @@ var Actions = function main() {
                             $('.callNotesBtn').clickToggle(function() {
                                 $(this).parent().parent().parent('.callContainer').css({
                                     position: 'absolute',
-                                    height: '450px',
+                                    height: '240px',
                                     zIndex: '1020',
                                     left: '8px'
                                 });
@@ -1477,11 +1554,12 @@ var Actions = function main() {
                         } else {
                             var d = JSON.parse(data);
                             for (var i = 0; i < d.length; i++) {
-                                var html = '<div class="col-md-4" style="position: relative;">' +
+                                var html = '<form id="call' + d[i].call_id + '"><div class="col-md-4" style="position: relative;">' +
                                     '<div class="callContainer row">' +
                                     '<div class="callHeader row">' +
 
                                     '<div id="call_date" class="col-md-12">' + d[i].call_date + '</div>' +
+
                                     '</div>' +
                                     '<div class="callActions row">' +
                                     '<div class="col-md-6">';
@@ -1514,11 +1592,11 @@ var Actions = function main() {
                                     '</div>' +
                                     '<div class="row">' +
                                     '<div class="col-md-12">' +
-                                    '<button type="button" id="callUpdateBtn">Update</button>' +
+                                    '<button type="button" id="callUpdateBtn">Update</button><button type="button" class="delCallBtn">Delete</button>' +
                                     '</div>' +
                                     '</div>' +
                                     '</div>' +
-                                    '</div>';
+                                    '</div></form>';
                                 $('.calls').prepend(html);
 
 
